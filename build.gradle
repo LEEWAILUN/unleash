@@ -85,3 +85,50 @@ task runUnleash(type: Exec) {
     standardOutput = System.out
     errorOutput = System.err
 }
+
+apply plugin: 'java'
+apply plugin:'jacoco'
+jacoco {
+    toolVersion = "0.8.7"
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+group = 'com.example'
+version = 'V1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}
+
+test {
+    testClassesDirs = sourceSets.test.output.classesDirs
+
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+    }
+    finalizedBy jacocoTestReport
+}
+
+ jar {
+    manifest {
+        attributes 'Main-Class': 'com.example.unleash'        
+    }
+
+    from sourceSets.main.output
+    archiveBaseName = 'unleash-main'
+    destinationDirectory = file('build/libs')
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
