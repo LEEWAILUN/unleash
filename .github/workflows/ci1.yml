@@ -26,9 +26,10 @@ jobs:
       - name: Make build script executable
         run: chmod +x ./scripts/build-frontend-if-needed.sh
 
-      # Check if the script is executable (for debugging purposes)
-      - name: Verify script permissions
-        run: ls -l ./scripts/build-frontend-if-needed.sh  # This will display the permissions
+  - name: Verify script permissions
+        run: |
+          chmod +x ./your-script.sh
+          ls -l ./your-script.sh
 
       # Run yarn build command
       - name: Run yarn build:frontend:if-needed
