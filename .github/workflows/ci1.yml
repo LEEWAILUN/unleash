@@ -22,6 +22,13 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      # Debugging: List files and check permissions
+      - name: List files and check permissions
+        run: |
+          ls -l unleash/scripts/
+          file unleash/scripts/build-frontend-if-needed.sh
+          ls -l
+
       # Ensure the script has executable permissions
       - name: Make build script executable
         run: chmod +x unleash/scripts/build-frontend-if-needed.sh
