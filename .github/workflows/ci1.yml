@@ -22,38 +22,47 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Make frontend build script executable
-        run: chmod +x ./scripts/build-frontend-if-needed.sh
+      # Ensure the script has executable permissions
+      - name: Make build script executable
+        run: chmod +x unleash/scripts/build-frontend-if-needed.sh
 
-      - name: Run frontend build
-        run: ./scripts/build-frontend-if-needed.sh
+      # Run the build script
+      - name: Run yarn build:frontend:if-needed
+        run: unleash/scripts/build-frontend-if-needed.sh
 
-      - name: Build project with Gradle
+      # Build with Gradle
+      - name: Build with Gradle
         run: ./gradlew build
 
+      # Upload Build Artifacts
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build-artifacts
           path: build/libs/**
 
-      - name: Run Unit Tests
+      # Run Unit Test
+      - name: Run Unit Test
         run: ./gradlew test
 
+      # Upload Test Reports
       - name: Upload Test Reports
         uses: actions/upload-artifact@v3
         with:
           name: test-reports
           path: build/reports/tests/**
 
-      - name: Generate and Upload Code Coverage Report
+      # Generate Code Coverage Report
+      - name: Generate code coverage report
         run: ./gradlew jacocoTestReport
 
+      # Upload Code Coverage Report
       - name: Upload Code Coverage Report
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
           path: build/reports/jacoco/test/html/**
 
+      # Run Deployment
       - name: Run Deployment
         run: java -jar build/libs/unleash-test-V1.jar
