@@ -1,16 +1,16 @@
 plugins {
     id 'base'
-    id 'com.github.node-gradle.node' version '3.4.0'
+    id 'com.github.node-gradle.node' version '3.4.0'  // Ensure you have the Node plugin applied
 }
 
 node {
-    version = '18.17.1' // Set your Node.js version
-    npmVersion = '8.15.0' // Set your npm version
+    version = '18.17.1'  // Match this with your project's Node.js version
+    npmVersion = '8.15.0'
     download = true
 }
 
 task installDependencies(type: NpmTask) {
-    description = 'Install project dependencies'
+    description = 'Install Node.js dependencies'
     group = 'build'
     args = ['install']
 }
@@ -18,7 +18,7 @@ task installDependencies(type: NpmTask) {
 task buildTypeScript(type: NpmTask) {
     description = 'Build TypeScript files'
     group = 'build'
-    args = ['run', 'build']
+    args = ['run', 'build:backend']
 }
 
 task testTypeScript(type: NpmTask) {
@@ -27,6 +27,13 @@ task testTypeScript(type: NpmTask) {
     args = ['run', 'test']
 }
 
+task clean(type: NpmTask) {
+    description = 'Clean TypeScript build artifacts'
+    group = 'build'
+    args = ['run', 'clean']
+}
+
 build.dependsOn installDependencies
 build.dependsOn buildTypeScript
 test.dependsOn testTypeScript
+clean.dependsOn ['clean']
