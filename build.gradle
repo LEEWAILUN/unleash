@@ -86,7 +86,7 @@ task runUnleash(type: Exec) {
     standardOutput = System.out
     errorOutput = System.err
 }
-=======
+
 apply plugin: 'java'
 apply plugin:'jacoco'
 jacoco {
@@ -143,5 +143,3 @@ jacocoTestReport {
         html.required = true
     }
 }
-
-
