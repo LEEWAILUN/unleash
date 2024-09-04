@@ -1,9 +1,9 @@
 name: CI
 on:
   push:
-    branches: [ master ]
+    branches: [ test ]
   pull_request:
-    branches: [ master ]
+    branches: [ test ]
 
 jobs:
   build:
@@ -19,7 +19,17 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      # Make build script executable
+      # Ensure Node.js is installed to run yarn commands
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      # Install dependencies using yarn
+      - name: Install dependencies
+        run: yarn install
+
+      # Make the build script executable
       - name: Make build script executable
         run: chmod +x ./scripts/build-frontend-if-needed.sh
 
@@ -62,4 +72,4 @@ jobs:
 
       # Run Deployment
       - name: Run Deployment
-        run: java -jar build/libs/unleash_test-V1.jar
+        run: java -jar build/libs/unleash-test-V1.jar
