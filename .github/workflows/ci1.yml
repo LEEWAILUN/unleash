@@ -11,6 +11,12 @@ jobs:
     runs-on: ubuntu-latest
  
     steps:
+     name: Make build script executable
+  run: chmod +x ./scripts/build-frontend-if-needed.sh
+
+- name: Run yarn build:frontend:if-needed
+  run: ./scripts/build-frontend-if-needed.sh
+  
     - name: Checkout code
       uses: actions/checkout@v4
  
