@@ -42,6 +42,14 @@ jobs:
       - name: Enable corepack
         run: corepack enable
       - run: yarn
+         # Make the build script executable
+      - name: Make build script executable
+        run: chmod +x ./scripts/build-frontend-if-needed.sh
+
+  - name: Verify script permissions
+        run: |
+          chmod +x ./your-script.sh
+          ls -l ./your-script.sh
       - run: yarn build:frontend:if-needed
       - run: yarn run test:coverage
         env:
