@@ -1,134 +1,32 @@
-
 plugins {
     id 'base'
+    id 'com.github.node-gradle.node' version '3.4.0'
 }
 
-task runDocker(type: Exec) {
-    description = 'Run Docker File'
-    commandLine 'docker', 'compose', 'up', '-d'
+node {
+    version = '18.17.1' // Set your Node.js version
+    npmVersion = '8.15.0' // Set your npm version
+    download = true
 }
 
-task runYarnInstall(type: Exec) {
-    // Path to the Yarn executable in the project
-    def yarnPath = 'C:/unleash-main/.yarn/releases/yarn-4.3.1.cjs'
-
-    // Command to run Yarn install
-    commandLine 'node', yarnPath, 'install'
-
-    // Set the working directory to where your package.json is located
-    workingDir 'C:/unleash'
-
-    // Print command output for debugging
-    standardOutput = System.out
-    errorOutput = System.err
+task installDependencies(type: NpmTask) {
+    description = 'Install project dependencies'
+    group = 'build'
+    args = ['install']
 }
 
-task runYarnInstallFrontEnd(type: Exec) {
-    // Path to the Yarn executable in the project
-    def yarnPath = 'C:/unleash-main/.yarn/releases/yarn-4.3.1.cjs'
-
-    // Command to run Yarn install
-    commandLine 'node', yarnPath, 'install'
-
-    // Set the working directory to where your package.json is located
-    workingDir 'C:/unleash/frontend'
-
-    // Print command output for debugging
-    standardOutput = System.out
-    errorOutput = System.err
+task buildTypeScript(type: NpmTask) {
+    description = 'Build TypeScript files'
+    group = 'build'
+    args = ['run', 'build']
 }
 
-task runDatabase(type: Exec) {
-    description = 'Create a new database for the project'
-    commandLine 'docker', 'run',
-        '-e', 'POSTGRES_USER=unleash_user',
-        '-e', 'POSTGRES_PASSWORD=password',
-        '-e', 'POSTGRES_DB=unleash',
-        '--name', 'postgres',
-        '-p', '5432:5432',
-        '-d',
-        'postgres'
+task testTypeScript(type: NpmTask) {
+    description = 'Run TypeScript tests'
+    group = 'verification'
+    args = ['run', 'test']
 }
 
-
-task executeDatabase(type: Exec){
-    description = 'Run the database'
-    commandLine 'docker', 'start', 'postgres'
-}
-
-task runBuild(type: Exec) {
-    // Path to the Yarn executable in the project
-    def yarnPath = 'C:/unleash-main/.yarn/releases/yarn-4.3.1.cjs'
-
-    // Command to run Yarn in order to build the application
-    commandLine 'node', yarnPath, 'build'
-
-    // Set the working directory to where your package.json is located
-    workingDir 'C:/unleash'
-
-    // Print command output for debugging
-    standardOutput = System.out
-    errorOutput = System.err
-}
-
-task runUnleash(type: Exec) {
-    // Path to the Yarn executable in the project
-    def yarnPath = 'C:/unleash-main/.yarn/releases/yarn-4.3.1.cjs'
-
-    // Command to run the application
-    commandLine 'node', yarnPath, 'dev'
-
-    // Set the working directory to where your package.json is located
-    workingDir 'C:/unleash'
-
-    // Print command output for debugging
-    standardOutput = System.out
-    errorOutput = System.err
-}
-
-apply plugin: 'java'
-apply plugin:'jacoco'
-jacoco {
-    toolVersion = "0.8.7"
-}
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
-group = 'com.example'
-version = 'V1'
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation 'junit:junit:4.13.2'
-}
-
-test {
-    testClassesDirs = sourceSets.test.output.classesDirs
-
-    testLogging {
-        events 'passed', 'skipped', 'failed'
-    }
-    finalizedBy jacocoTestReport
-}
-
- jar {
-    manifest {
-        attributes 'Main-Class': 'com.example.unleash'        
-    }
-
-    from sourceSets.main.output
-    archiveBaseName = 'unleash-main'
-    destinationDirectory = file('build/libs')
-}
-
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.required = true
-        html.required = true
-    }
-}
+build.dependsOn installDependencies
+build.dependsOn buildTypeScript
+test.dependsOn testTypeScript
