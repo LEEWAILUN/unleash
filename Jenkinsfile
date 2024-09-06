@@ -3,8 +3,7 @@ pipeline {
     stages { 
         stage('Checkout') { 
             steps { 
-                git branch: 'master', url: 'https://github.com/nawaf83/hello-world
-java1.git' 
+                git branch: 'master', url: 'https://github.com/LEEWAILUN/unleash.git' 
             } 
         } 
         stage('Build') { 
@@ -14,8 +13,7 @@ java1.git'
             steps { powershell 'gradle test'} 
         } 
         stage('Deploy') { 
-            steps { powershell 'java -jar build/libs/hello-world-java
-V1.jar'}            
+            steps { powershell 'java -jar build/libs/unleash-V1.jar'}            
         }     
 } 
 UECS2363 SOFTWARE CONSTRUCTION AND CONFIGURATION 
