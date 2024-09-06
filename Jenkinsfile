@@ -13,7 +13,7 @@ pipeline {
             steps { powershell 'gradle test'} 
         } 
         stage('Deploy') { 
-            steps { powershell 'java -jar build/libs/unleash-V1.jar'}            
+            steps { powershell 'java -jar build/libs/unleash-test-V1.jar'}            
         }     
 } 
 UECS2363 SOFTWARE CONSTRUCTION AND CONFIGURATION 
